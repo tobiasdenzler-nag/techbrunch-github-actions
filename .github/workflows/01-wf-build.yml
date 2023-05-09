@@ -1,4 +1,4 @@
-name: Build Java App
+name: 01 - Build Java App
 on: [push]
 jobs:
   build:
