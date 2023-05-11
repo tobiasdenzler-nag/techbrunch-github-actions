@@ -1,0 +1,38 @@
+name: Example Workflow
+
+on: [push]
+
+permissions:
+  contents: write
+  checks: write
+
+jobs:
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: 17
+        distribution: temurin
+
+    - name: Build with Maven
+      run: mvn -B package
+
+    - name: Copy test results
+      if: always()
+      run: mkdir test-results && cp target/*-reports/TEST-*.xml test-results
+    
+    - name: Publish test results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Unit Test Results
+        path: 'test-results/**/*.xml'
+        reporter: java-junit

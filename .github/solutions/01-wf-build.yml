@@ -1,15 +1,22 @@
-name: 01 - Build Java App
+name: Example Workflow
+
 on: [push]
+
 jobs:
   build:
+    name: Build Application
     runs-on: ubuntu-latest
+
     steps:
+
     - name: Checkout repository
       uses: actions/checkout@v3
+
     - name: Set up Java
       uses: actions/setup-java@v3
       with:
         java-version: 17
         distribution: temurin
+
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B package

@@ -1,0 +1,65 @@
+name: Example Workflow
+
+on: [push]
+
+permissions:
+  contents: write
+  checks: write
+  packages: write
+
+env:
+  REGISTRY: "ghcr.io"
+
+jobs:
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: 17
+        distribution: temurin
+
+    - name: Build with Maven
+      run: mvn -B package
+
+    - name: Copy test results
+      if: always()
+      run: mkdir test-results && cp target/*-reports/TEST-*.xml test-results
+    
+    - name: Publish test results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Unit Test Results
+        path: 'test-results/**/*.xml'
+        reporter: java-junit
+    
+    - name: Save compiled artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: app
+        path: target
+        retention-days: 1
+
+  container-hello:
+    name: Container Hello
+    uses: <your.github.username>/techbrunch-github-actions/.github/workflows/04-job-container.yml@main
+    secrets: inherit
+    needs: [build]
+    with:
+      image-tag: hello
+
+  container-byebye:
+    name: Container Byebye
+    uses: <your.github.username>/techbrunch-github-actions/.github/workflows/04-job-container.yml@main
+    secrets: inherit
+    needs: [build]
+    with:
+      image-tag: byebye

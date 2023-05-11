@@ -11,5 +11,12 @@ public class HelloController {
         // just a comment to check it bla
 		return "Greetings from Rocket!";
 	}
+	
+	// --> Übung 2 
+	// @GetMapping("/bye")
+	// public String bye() {
+    //     // just a comment to check it bla
+	// 	return "ByeBye!";
+	// }
 
 }
