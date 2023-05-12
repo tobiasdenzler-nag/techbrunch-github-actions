@@ -27,11 +27,11 @@ class RocketHelloWorldApplicationTests {
 	}
 
 	// Übung 2
-	// @Test
-	// public void getBye() throws Exception {
-	// 	mvc.perform(MockMvcRequestBuilders.get("/bye").accept(MediaType.APPLICATION_JSON))
-	// 			.andExpect(status().isOk())
-	// 			.andExpect(content().string(equalTo("ByeBy!")));
-	// }
+	@Test
+	public void getBye() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/bye").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().string(equalTo("ByeBy!")));
+	}
 
 }
