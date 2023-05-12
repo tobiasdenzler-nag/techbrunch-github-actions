@@ -2,6 +2,10 @@ name: Example Workflow
 
 on: [push]
 
+permissions:
+  contents: write
+  checks: write
+
 jobs:
   build:
     name: Build Application
@@ -20,3 +24,15 @@ jobs:
 
     - name: Build with Maven
       run: mvn -B package
+
+    - name: Copy test results
+      if: always()
+      run: mkdir test-results && cp target/*-reports/TEST-*.xml test-results
+    
+    - name: Publish test results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Unit Test Results
+        path: 'test-results/**/*.xml'
+        reporter: java-junit
