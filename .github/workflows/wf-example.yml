@@ -48,32 +48,18 @@ jobs:
         path: target
         retention-days: 1
 
-  container:
-    name: Build Docker Image
-    runs-on: ubuntu-latest
+  container-hello:
+    name: Container Hello
+    uses: tobiasdenzler-nag/techbrunch-github-actions/.github/workflows/04-job-container.yml@main
+    secrets: inherit
     needs: [build]
-    
-    steps:
-    
-    - name: Checkout repository
-      uses: actions/checkout@v3
+    with:
+      image-tag: hello
 
-    - name: Download application binary
-      uses: actions/download-artifact@v3
-      with:
-        name: app
-        path: target
-
-    - name: Log in to the Container Registry
-      uses: docker/login-action@v2
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        push: true
-        tags: ${{ env.REGISTRY }}/${{ github.repository }}:latest
+  container-byebye:
+    name: Container Byebye
+    uses: tobiasdenzler-nag/techbrunch-github-actions/.github/workflows/04-job-container.yml@main
+    secrets: inherit
+    needs: [build]
+    with:
+      image-tag: byebye
